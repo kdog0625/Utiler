@@ -7,10 +7,21 @@ if(!empty($_POST)){
   //変数にユーザー名を格納
   $email = $_POST['email'];
   $pass = $_POST['pass'];
+  print_r($error_mes);
 
   ////未入力チェック
   validatenot($email,'email');
   validatenot($pass,'pass');
+
+  if(empty($err_msg)) {
+    //emailの形式チェック
+    validEmail($email, 'email');
+    //パスワードの最大文字数チェック
+    vaildpassMaxLen($pass,'pass');
+    //パスワードの最小文字数チェック
+    vaildpassMinLen($pass,'pass');
+    print_r($error_mes);
+  }
 }
 
 require('head_info.php');
@@ -35,7 +46,7 @@ require('head_info.php');
         </label>
         <div class="error_mes">
           <?php 
-          if(!empty($reg['email'])) echo $reg['email'];
+          if(!empty($error_mes['email'])) echo $error_mes['email'];
           ?>
         </div>
           <label>
@@ -44,7 +55,7 @@ require('head_info.php');
           </label>
         <div class="error_mes">
           <?php 
-          if(!empty($reg['pass'])) echo $reg['pass'];
+          if(!empty($error_mes['pass'])) echo $error_mes['pass'];
         ?>
           </div>
           <label>
