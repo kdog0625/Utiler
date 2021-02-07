@@ -175,7 +175,7 @@ header{
   padding: 15px 20px;
   text-align: center;
   font-size: 25px;
-  background: #444;
+  background: #00a1e9;
   color: #fff;
   width: 300px;
   margin: 0 auto 60px;
@@ -188,3 +188,42 @@ header{
   overflow: hidden;
 }
 
+.button-container {
+  overflow: hidden;
+  margin: 0 auto;
+  text-align: center;
+}
+
+input[type='submit'] {
+  padding: 15px 30px;
+  margin: 30px 0;
+  font-size: 18px;
+  border: none;
+  background: #444;
+  color: #fff;
+}
+
+.err > input {
+  background: #ffcccc;
+}
+
+.error_mes{
+  margin: 5px 0 30px 0;
+  color: #ff4500;
+}
+
+/* ログインページ */
+.form-login{
+  width: 60%;
+  margin: 0px auto;
+}
+
+.form-login h2 {
+  padding: 15px 20px;
+  text-align: center;
+  font-size: 25px;
+  background: #ff4500;
+  color: #fff;
+  width: 300px;
+  margin: 0 auto 60px;
+}
