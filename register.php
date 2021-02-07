@@ -15,8 +15,24 @@ if(!empty($_POST)){
   validatenot($email,'email');
   validatenot($pass,'pass');
   validatenot($pass_re,'pass_re');
+
+  if(empty($err_msg)) {
+  //ニックネームの最大文字数チェック
+  validNameMaxLen($name, 'name');
+  //emailの形式チェック
+  validEmail($email, 'email');
+  //パスワードの最大文字数チェック
+  vaildpassMaxLen($pass,'pass');
+  //パスワードの最小文字数チェック
+  vaildpassMinLen($pass,'pass');
+  //パスワード再確認の最大文字数チェック
+  vaildpass_re_MaxLen($pass_re,'pass_re');
+  //パスワード再確認の最小文字数チェック
+  vaildpass_re_MinLen($pass_re,'pass_re');
+  print_r($error_mes);
+  }
 }
-    require('head_info.php');
+  require('head_info.php');
 ?>
 
 <?php
@@ -29,12 +45,12 @@ if(!empty($_POST)){
     <!-- form actionが空の場合は自分自身のページにジャンプさせる。 -->
     <form action="" method='post' class='form'>
       <label>
-          ニックネーム<span class='form-rule'>※10文字以内</span></br>
+          ニックネーム</br>
           <input type="text" name='name' value="<?php print(htmlspecialchars($_POST['name'],ENT_QUOTES));?>"/>
       </label>
       <div class="error_mes">
           <?php 
-          if(!empty($reg['name'])) echo $reg['name'];
+          if(!empty($error_mes['name'])) echo $error_mes['name'];
           ?>
       </div>
       <label>
@@ -43,7 +59,7 @@ if(!empty($_POST)){
       </label>
       <div class="error_mes">
           <?php 
-          if(!empty($reg['email'])) echo $reg['email'];
+          if(!empty($error_mes['email'])) echo $error_mes['email'];
           ?>
       </div>
       <label>
@@ -52,7 +68,7 @@ if(!empty($_POST)){
       </label>
       <div class="error_mes">
           <?php 
-          if(!empty($reg['pass'])) echo $reg['pass'];
+          if(!empty($error_mes['pass'])) echo $error_mes['pass'];
           ?>
       </div>
       <label>
@@ -61,7 +77,7 @@ if(!empty($_POST)){
       </label>
       <div class="error_mes">
         <?php 
-          if(!empty($reg['pass_re'])) echo $reg['pass_re'];
+          if(!empty($error_mes['pass_re'])) echo $error_mes['pass_re'];
           ?>
       </div>
         <div class='button-container'>
