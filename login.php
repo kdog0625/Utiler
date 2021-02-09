@@ -34,7 +34,7 @@ require('head_info.php');
   <div class='form-login'>
     <h2><i class="fas fa-sign-in-alt"></i>ログイン</h2>
       <section class='guestuser'>
-          ゲストユーザーの方は以下のメールアドレス・パスワードを使用してください。
+          ゲストユーザー用
           <p><i class="far fa-envelope"></i>メールアドレス：guest@mail.com</p>
           <p><i class="fas fa-unlock-alt"></i>パスワード：guestuser</p>
       </section>
