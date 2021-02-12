@@ -7,7 +7,7 @@
 function getDatabaseConnection() {
     try
     {
-        $database_handler = new PDO('mysql:host=db;dbname=utiler;charset=utf8mb4', 'root', 'secret');
+        $database_handler = new PDO('mysql:dbname=utiler;host = 127.0.0.1;;port=8889;charset=utf8', 'root', 'root');
     }
     catch (PDOException $e)
     {
