@@ -2,8 +2,35 @@
     require('../common/head_info.php');
 ?>
 <?php 
- require('../common/header.php');
+  require('../common/database.php');
+
+//POST送信された場合
+if(!empty($_POST)) {
+  $email=$_POST['email'];
+  $pass = $_POST['pass'];
+
+  //未入力チェック
+  validateNot($email,'email');
+  validateNot($pass,'pass');
+
+  print_r($err_msg);
+
+  if(empty($err_msg[$value])) {
+
+  $database_handler = getDatabaseConnection();
+  // プリペアドステートメントで SQLをあらかじめ用意しておく
+  $statement = $database_handler->prepare('SELECT * FROM users');
+
+  $statement->bindParam(':email', htmlspecialchars($email));
+  $statement->bindParam(':password', $password);
+  $statement->execute();
+  }
+}
 ?> 
+
+<?php
+require('../common/header.php');
+?>
 
 <div class='main-top'>
   <div class='form-login'>
@@ -16,17 +43,23 @@
       </section>
 
       <form action="" method='post' class='form'>
-        <p>
           <label>
-            <input type="text" name='email' placeholder="メールアドレス">
+            <input type="text" name='email' placeholder="メールアドレス"  value="<?php print(htmlspecialchars($_POST['email'],ENT_QUOTES));?>">
+            <div class="error_mes">
+            <?php 
+            if(!empty($err_msg['email'])) echo $err_msg['email'];
+            ?>
+            </div>
           </label>
-        </p>
-        <p>
           <label>
-            <input type="password" name='pass' placeholder="パスワード"></br>
+            <input type="password" name='pass' placeholder="パスワード"   value="<?php print(htmlspecialchars($_POST['pass'],ENT_QUOTES));?>"></br>
+            <div class="error_mes">
+            <?php 
+            if(!empty($err_msg['pass'])) echo $err_msg['pass'];
+            ?>
+            </div>
             <span class='form-rule'>※英数字8文字以上</span>
           </label>
-        </p>
           <label>
             <input type="checkbox" name='pass_save'>次回ログインを省略する
           </label>
