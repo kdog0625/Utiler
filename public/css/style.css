@@ -86,7 +86,17 @@ header{
   padding: 15px 15px;
   background: #00a1e9;
   color: #fff;
+  border: 1px #00a1e9 solid;
 }
+
+.nav_register a:hover{
+  color: #444;
+  background: #fff;
+  padding: 15px 15px;
+  cursor: pointer;
+  border: 1px #00a1e9 solid;
+}
+
 
 .nav_login{
   text-align: center;
@@ -102,6 +112,15 @@ header{
   padding: 15px 15px;
   background: #f03;
   color: #fff;
+  border: 1px #f03 solid;
+}
+
+.nav_login a:hover{ 
+  color: #444;
+  background: #fff;
+  padding: 15px 15px;
+  cursor: pointer;
+  border: 1px #f03 solid;
 }
 
 
@@ -265,6 +284,20 @@ input[type='submit']:hover {
   width: 305px;
   background: #eee;
   box-sizing: border-box;
+}
+
+/* 投稿 */
+.community-create{
+  width: 100%;
+  overflow: hidden;
+  height: 300px;
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+
+.tweet-top{
+  padding: 20px;
+  border: 1px solid #0068b7;
 }
 
 
