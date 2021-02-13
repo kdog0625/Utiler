@@ -3,8 +3,9 @@
 ?>
 <?php
     require('../common/database.php');
+?>
 
-
+<?php
 //POST送信された場合
 if(!empty($_POST)) {
     $name=$_POST['name'];
@@ -33,20 +34,36 @@ if(!empty($_POST)) {
       //パスワードの半角英数字チェック
 
       if(empty($err_msg)) {
+        try {
+          //DB接続 
+          $database_handler = getDatabaseConnection();
+          // プリペアドステートメントで SQLをあらかじめ用意しておく
+          $statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
+          $password = password_hash($pass, PASSWORD_DEFAULT);
 
-        $database_handler = getDatabaseConnection();
-        // プリペアドステートメントで SQLをあらかじめ用意しておく
-        $statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
-        $password = password_hash($pass, PASSWORD_DEFAULT);
+          $statement->bindParam(':name', htmlspecialchars($name));
+          $statement->bindParam(':email', htmlspecialchars($email));
+          $statement->bindParam(':password', $password);
+          $statement->execute();
 
-        $statement->bindParam(':name', htmlspecialchars($name));
-        $statement->bindParam(':email', htmlspecialchars($email));
-        $statement->bindParam(':password', $password);
-        $statement->execute();
-        header('Location:../tweets/index.php');
+          //クエリ成功の場合
+          if($statement) {
+            //ログイン有効期限（デフォルトを1時間とする）
+            $sessionLimit = 60*60;
+            //最終ログイン日時を現在日時に
+            $_SESSION['login_date'] = time();
+            $_SESSION['login_limit'] = $sessionLimit;
+            //ユーザーIDを格納
+            $_SESSION['user_id'] = $database_handler->lastInsertId();
+          }
+          header('Location:../tweets/index.php');
+        }catch(Exception $e) {
+          error_log('エラー発生：' . $e -> getMessage());
+          $err_msg['common'] = MSG08;
+        }
       }
     }
-}
+} 
 ?>
   
 <?php 

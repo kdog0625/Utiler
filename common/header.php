@@ -6,8 +6,19 @@
     <h1><a href="../tweets/index.php">Utiler</a></h1>
     <nav id='top-nav'>
       <ul>
-        <li class=nav_register><a href='../users/register.php'><i class="fas fa-user-plus"></i>ユーザー登録</a></li>
-        <li class="nav_login"><a href='../users/login.php'><i class="fas fa-sign-in-alt"></i>ログイン</a></li>
+        <?php
+          if(empty($_SESSION['user_id'])) {
+        ?>
+          <li class=nav_register><a href='../users/register.php'><i class="fas fa-user-plus"></i>ユーザー登録</a></li>
+          <li class="nav_login"><a href='../users/login.php'><i class="fas fa-sign-in-alt"></i>ログイン</a></li>
+        <?php 
+          }else{
+        ?>
+          <li class=nav_register><a href='../users/register.php'><i class="fas fa-user-plus"></i>マイページ</a></li>
+          <li class="nav_login"><a href='../users/login.php'><i class="fas fa-sign-in-alt"></i>ログアウト</a></li>
+        <?php
+          }
+        ?>
       </ul>
     </nav>
   </div>
