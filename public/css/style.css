@@ -178,6 +178,18 @@ header{
   text-align: center;
 }
 
+input[type='text'], input[type='password'] {
+  width: 80%;
+  font-size: 13px;
+  height: 45px;
+  border: 1px #ddd solid;
+  background: white;
+  border-radius: 7px;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+
 input[type='submit'] {
   padding: 15px 30px;
   margin: 15px 0;
@@ -197,10 +209,22 @@ input[type='submit']:hover {
 
 .form-rule{
   color: #888;
-  margin: 5px 0 0 0;
+  margin: 5px 0 20px 0;
   font-size: 10px;
 }
 
+.form label {
+  display: block;
+  text-align: center;
+}
+
+.form p input {
+  width: 80%;
+  font-size: 13px;
+  height: 45px;
+  text-align: center;
+  border: 1px #ddd solid;
+}
 
 
 /*========================================
@@ -249,6 +273,18 @@ input[type='submit']:hover {
   width: 305px;
   background: #eee;
   box-sizing: border-box;
+}
+
+
+/*========================================
+バリデーションエラー時
+========================================*/
+
+.error_mes{
+  color: #ff4500;
+  width: 80%;
+  margin: 0 auto;
+  text-align: left;
 }
 
 

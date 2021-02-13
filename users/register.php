@@ -4,35 +4,35 @@
 <?php
     require('../common/database.php');
 
+
+    //POST送信された場合
+if(!empty($_POST)) {
     $name=$_POST['name'];
     $email=$_POST['email'];
     $pass = $_POST['pass'];
     $pass_re = $_POST['pass_re'];
 
+    //未入力チェック
+    validateNot($name,'name');
+    validateNot($email,'email');
+    validateNot($pass,'pass');
+    validateNot($pass_re,'pass_re');
+
+    print_r($err_msg);
+
+    if(empty($err_msg[$value])) {
 
     $database_handler = getDatabaseConnection();
+    // プリペアドステートメントで SQLをあらかじめ用意しておく
     $statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
     $password = password_hash($pass, PASSWORD_DEFAULT);
 
     $statement->bindParam(':name', htmlspecialchars($name));
-    $statement->bindParam(':email', $email);
+    $statement->bindParam(':email', htmlspecialchars($email));
     $statement->bindParam(':password', $password);
     $statement->execute();
-
-//     //POST送信された場合
-// if(!empty($_POST)) {
-
-//   debug('POSTの中身:'.print_r($_POST, true));
-  
-//   $statement = $db->prepare('INSERT INTO users SET email=?, password=?, name=?, created=NOW()');
-//   $statement->execute(array(
-//     $_SESSION['name'],
-//     $_SESSION['email'],
-//     sha1($_SESSION['password'])
-//   ));      
-//   header('Location: ../tweets/index.php');
-//   exit();
-// }
+    }
+}
 ?>
   
 <?php 
@@ -44,28 +44,40 @@
     <div class="form-register-list">
       <h2><i class="fas fa-user-plus"></i>ユーザー登録</h2>
       <form action="" method='post' class='form'>
-        <p>
           <label>
             <input type="text" name='name' placeholder="ニックネーム"  value="<?php print(htmlspecialchars($_POST['name'],ENT_QUOTES));?>">
+            <div class="error_mes">
+            <?php 
+            if(!empty($err_msg['name'])) echo $err_msg['name'];
+            ?>
+            </div>
           </label>
-        </p>
-        <p>
           <label>
             <input type="text" name='email' placeholder="メールアドレス" value="<?php print(htmlspecialchars($_POST['email'],ENT_QUOTES));?>">
+            <div class="error_mes">
+            <?php 
+            if(!empty($err_msg['email'])) echo $err_msg['email'];
+            ?>
+            </div>
           </label>
-        </p>
-        <p>
           <label>
             <input type="password" name='pass' placeholder="パスワード"  value="<?php print(htmlspecialchars($_POST['pass'],ENT_QUOTES));?>"></br>
+            <div class="error_mes">
+            <?php 
+            if(!empty($err_msg['pass'])) echo $err_msg['pass'];
+            ?>
+            </div>
             <span class='form-rule'>※英数字8文字以上</span>
           </label>
-        </p>
-        <p>
           <label>
             <input type="password" name='pass_re' placeholder="パスワード確認"  value="<?php print(htmlspecialchars($_POST['pass_re'],ENT_QUOTES));?>"></br>
+            <div class="error_mes">
+            <?php 
+            if(!empty($err_msg['pass_re'])) echo $err_msg['pass_re'];
+            ?>
+            </div>
             <span class='form-rule'>※英数字8文字以上</span>
-          </label>
-        </p>
+          </label>      
           <div class='button-container'>
             <input type="submit" value='登録する'>
           </div>
