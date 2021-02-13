@@ -18,8 +18,6 @@ if(!empty($_POST)) {
     validateNot($pass,'pass');
     validateNot($pass_re,'pass_re');
 
-    print_r($err_msg);
-
     if(empty($err_msg)) {
       //ニックネームの最大文字数チェック
       validateNameMaxLen($name, 'name');
