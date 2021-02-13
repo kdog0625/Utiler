@@ -20,17 +20,33 @@ if(!empty($_POST)) {
 
     print_r($err_msg);
 
-    if(empty($err_msg[$value])) {
+    if(empty($err_msg)) {
+      //ニックネームの最大文字数チェック
+      validateNameMaxLen($name, 'name');
 
-    $database_handler = getDatabaseConnection();
-    // プリペアドステートメントで SQLをあらかじめ用意しておく
-    $statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
-    $password = password_hash($pass, PASSWORD_DEFAULT);
+      //メールアドレスの重複チェック
 
-    $statement->bindParam(':name', htmlspecialchars($name));
-    $statement->bindParam(':email', htmlspecialchars($email));
-    $statement->bindParam(':password', $password);
-    $statement->execute();
+      //メールアドレスの形式チェック
+
+      //パスワードの最大文字数チェック
+      validatePassMaxLen($pass,'pass');
+      //パスワードの最小文字数チェック
+      validatePassMinLen($pass,'pass');
+      //パスワードの半角英数字チェック
+
+      if(empty($err_msg)) {
+
+        $database_handler = getDatabaseConnection();
+        // プリペアドステートメントで SQLをあらかじめ用意しておく
+        $statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
+        $password = password_hash($pass, PASSWORD_DEFAULT);
+
+        $statement->bindParam(':name', htmlspecialchars($name));
+        $statement->bindParam(':email', htmlspecialchars($email));
+        $statement->bindParam(':password', $password);
+        $statement->execute();
+        header('Location:../tweets/index.php');
+      }
     }
 }
 ?>

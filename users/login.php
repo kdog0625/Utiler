@@ -15,15 +15,31 @@ if(!empty($_POST)) {
 
   print_r($err_msg);
 
-  if(empty($err_msg[$value])) {
 
-  $database_handler = getDatabaseConnection();
-  // プリペアドステートメントで SQLをあらかじめ用意しておく
-  $statement = $database_handler->prepare('SELECT * FROM users');
+  if(empty($err_msg)) {
+    //ニックネームの最大文字数チェック
+    validateNameMaxLen($name, 'name');
 
-  $statement->bindParam(':email', htmlspecialchars($email));
-  $statement->bindParam(':password', $password);
-  $statement->execute();
+    //メールアドレスの重複チェック
+
+    //メールアドレスの形式チェック
+
+    //パスワードの最大文字数チェック
+    validatePassMaxLen($pass,'pass');
+    //パスワードの最小文字数チェック
+    validatePassMinLen($pass,'pass');
+    //パスワードの半角英数字チェック
+
+    if(empty($err_msg)) {
+
+      $database_handler = getDatabaseConnection();
+      // プリペアドステートメントで SQLをあらかじめ用意しておく
+      $statement = $database_handler->prepare('SELECT * FROM users');
+
+      $statement->bindParam(':email', htmlspecialchars($email));
+      $statement->bindParam(':password', $password);
+      $statement->execute();
+    }
   }
 }
 ?> 
