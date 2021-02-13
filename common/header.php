@@ -14,8 +14,8 @@
         <?php 
           }else{
         ?>
-          <li class=nav_register><a href='../users/register.php'><i class="fas fa-user-plus"></i>マイページ</a></li>
-          <li class="nav_login"><a href='../users/login.php'><i class="fas fa-sign-in-alt"></i>ログアウト</a></li>
+          <li class=nav_register><a href='../users/mypage.php'><i class="fas fa-user"></i>マイページ</a></li>
+          <li class="nav_login"><a href='../users/logout.php'><i class="fas fa-sign-out-alt"></i>ログアウト</a></li>
         <?php
           }
         ?>
