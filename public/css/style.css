@@ -218,14 +218,6 @@ input[type='submit']:hover {
   text-align: center;
 }
 
-.form p input {
-  width: 80%;
-  font-size: 13px;
-  height: 45px;
-  text-align: center;
-  border: 1px #ddd solid;
-}
-
 
 /*========================================
 ゲストユーザー

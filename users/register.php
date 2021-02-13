@@ -5,7 +5,7 @@
     require('../common/database.php');
 
 
-    //POST送信された場合
+//POST送信された場合
 if(!empty($_POST)) {
     $name=$_POST['name'];
     $email=$_POST['email'];
