@@ -41,6 +41,7 @@ if(!empty($_POST)) {
           $statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
           $password = password_hash($pass, PASSWORD_DEFAULT);
 
+          //指定された変数名にパラメータをバインド(紐付け)
           $statement->bindParam(':name', htmlspecialchars($name));
           $statement->bindParam(':email', htmlspecialchars($email));
           $statement->bindParam(':password', $password);
