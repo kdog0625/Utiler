@@ -25,19 +25,21 @@ if(!empty($_POST)) {
       //例外処理
       try {
           $user_id = getLoginUserId();
+          print_r('debug',$user_id);
           //DB接続 
           $database_handler = getDatabaseConnection();
           // プリペアドステートメントで SQLをあらかじめ用意しておく
           $statement = $database_handler->prepare('INSERT INTO tweets (user_id, title, content) VALUES (:user_id, :title, :content)');
           //指定された変数名にパラメータをバインド(紐付け)
           $statement->bindParam(':title', $title);
+          $statement->bindParam(':content', $content);
           $statement->bindParam(':user_id', $user_id);
           $statement->execute();
 
           $_SESSION['select_tweet'] = [
             'id' => $database_handler->lastInsertId(),
             'title' => $title,
-            'content' => '',
+            'content' => $content,
         ];
 
 
