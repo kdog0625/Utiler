@@ -1,16 +1,17 @@
 <?php
-    require('../common/head_info.php');
+require('../common/function.php');
+require('../common/database.php');
+require('../common/head_info.php');
 ?>
+
 <?php
-    require('../common/database.php');
-
-
 //POST送信された場合
 if(!empty($_POST)) {
     $name=$_POST['name'];
     $email=$_POST['email'];
     $pass = $_POST['pass'];
     $pass_re = $_POST['pass_re'];
+
 
     //未入力チェック
     validateNot($name,'name');
@@ -33,20 +34,34 @@ if(!empty($_POST)) {
       //パスワードの半角英数字チェック
 
       if(empty($err_msg)) {
-
-        $database_handler = getDatabaseConnection();
-        // プリペアドステートメントで SQLをあらかじめ用意しておく
-        $statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
-        $password = password_hash($pass, PASSWORD_DEFAULT);
-
-        $statement->bindParam(':name', htmlspecialchars($name));
-        $statement->bindParam(':email', htmlspecialchars($email));
-        $statement->bindParam(':password', $password);
-        $statement->execute();
+        try {
+          //DB接続処理 
+          $database_handler = getDatabaseConnection();
+          // プリペアドステートメントで SQLをあらかじめ用意しておく
+          if($statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)')){
+            $password = password_hash($pass, PASSWORD_DEFAULT);
+            //指定された変数名にパラメータをバインド(紐付け)
+            $statement->bindParam(':name', htmlspecialchars($name));
+            $statement->bindParam(':email', htmlspecialchars($email));
+            $statement->bindParam(':password', $password);
+            $statement->execute();  
+          }
+          
+          // ユーザー情報保持
+          $_SESSION['user'] = [
+            'name' => $name,
+            'id' => $database_handler->lastInsertId()
+          ];
+        }catch(Exception $e) {
+          error_log('エラー発生：' . $e -> getMessage());
+          $err_msg['common'] = MSG08;
+          exit;
+        }
         header('Location:../tweets/index.php');
+        exit;
       }
     }
-}
+} 
 ?>
   
 <?php 
