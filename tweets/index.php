@@ -1,9 +1,19 @@
 <?php
-    require('../common/head_info.php');
-    require('../common/database.php');
-?>
-<?php 
- require('../common/header.php');
+require('../common/auth.php');
+require('../common/function.php');
+require('../common/database.php');
+require('../common/head_info.php');
+require('../common/header.php');
+
+
+
+$name = getLoginUserName();
+$user_id = getLoginUserId();
+$database_handler = getDatabaseConnection();
+    if ($statement = $database_handler->prepare("SELECT id, title, content, updated_at FROM memos WHERE user_id = :user_id ORDER BY updated_at DESC")) {
+        $statement->bindParam(':user_id', $user_id);
+        $statement->execute();
+    }
 ?> 
 
 <?php

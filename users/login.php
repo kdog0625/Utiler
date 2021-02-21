@@ -1,9 +1,20 @@
 <?php
-    require('../common/head_info.php');
-?>
-<?php 
-  require('../common/database.php');
+    
+    require '../common/auth.php';
 
+    if(isLogin()) {
+        header('Location: ../tweets/index.php');
+        exit;
+    }
+?>
+<?php
+require('../common/function.php');
+require('../common/database.php');
+require('../common/head_info.php');
+?>
+
+
+<?php 
 //POST送信された場合
 if(!empty($_POST)) {
   $email=$_POST['email'];
@@ -14,8 +25,6 @@ if(!empty($_POST)) {
   validateNot($pass,'pass');
 
   if(empty($err_msg)) {
-    //ニックネームの最大文字数チェック
-    validateNameMaxLen($name, 'name');
 
     //メールアドレスの重複チェック
 
@@ -31,11 +40,54 @@ if(!empty($_POST)) {
 
       $database_handler = getDatabaseConnection();
       // プリペアドステートメントで SQLをあらかじめ用意しておく
-      $statement = $database_handler->prepare('SELECT * FROM users');
+      if ($statement = $database_handler->prepare('SELECT id, name, password FROM users WHERE email = :email')) {
+         $statement->bindParam(':email', $email);
+         $statement->execute();
+         $user = $statement->fetch();
+         
+        if (!$user) {
+            $_SESSION['errors'] = [
+                'メールアドレスまたはパスワードが間違っています。'
+            ];
+            header('Location: ../users/login.php');
+            exit;
+        }
 
-      $statement->bindParam(':email', htmlspecialchars($email));
-      $statement->bindParam(':password', $password);
-      $statement->execute();
+        $name = $user['name'];
+        $id = $user['id'];
+
+        if (password_verify($pass, $user['password'])) {
+            // ユーザー情報保持
+            $_SESSION['user'] = [
+                'name' => $name,
+                'id' => $id
+            ];
+
+            // 更新日が最新のメモ情報保持
+            if ($statement = $database_handler->prepare("SELECT id, title, content FROM memos WHERE user_id = :user_id ORDER BY updated_at DESC LIMIT 1")) {
+                $statement->bindParam(":user_id", $id);
+                $statement->execute();
+                $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+                if ($result) {
+                    $_SESSION['select_tweets'] = [
+                        'id' => $result['id'],
+                        'title' => $result['title'],
+                        'content' => $result['content']
+                    ];
+                }
+            }
+
+            header('Location: ../tweets/index.php');
+            exit;
+        } else {
+            $_SESSION['errors'] = [
+                'メールアドレスまたはパスワードが間違っています。'
+            ];
+            header('Location: ../users/login.php');
+            exit;
+        }
+      }
     }
   }
 }
@@ -57,7 +109,7 @@ require('../common/header.php');
 
       <form action="" method='post' class='form'>
           <label>
-            <input type="text" name='email' placeholder="メールアドレス"  value="<?php print(htmlspecialchars($_POST['email'],ENT_QUOTES));?>">
+            <input type="text" name='email' placeholder="メールアドレス" autocomplete="off">
             <div class="error_mes">
             <?php 
             if(!empty($err_msg['email'])) echo $err_msg['email'];
@@ -65,7 +117,7 @@ require('../common/header.php');
             </div>
           </label>
           <label>
-            <input type="password" name='pass' placeholder="パスワード"   value="<?php print(htmlspecialchars($_POST['pass'],ENT_QUOTES));?>"></br>
+            <input type="password" name='pass' placeholder="パスワード"  autocomplete="off"></br>
             <div class="error_mes">
             <?php 
             if(!empty($err_msg['pass'])) echo $err_msg['pass'];

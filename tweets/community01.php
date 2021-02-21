@@ -1,12 +1,18 @@
+<?php
+require('../common/function.php');
+
+require('../common/database.php');
+?>
+<?php
+require('../common/head_info.php');
+?>
 <?php 
-  require('../common/head_info.php');
-  require('../common/database.php');
-  require('../common/header.php');
+require('../common/header.php');
 ?> 
 
 <div class="main-top">
   <?php
-    if(!empty($_SESSION['user_id'])) {
+    if(!empty($_SESSION['user']['id'])) {
   ?>
   <div class="community-create">
     <div class="tweet-top">

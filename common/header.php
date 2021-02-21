@@ -7,7 +7,7 @@
     <nav id='top-nav'>
       <ul>
         <?php
-          if(empty($_SESSION['user_id'])) {
+          if(empty($_SESSION['user']['id'])) {
         ?>
           <li class=nav_register><a href='../users/register.php'><i class="fas fa-user-plus"></i>ユーザー登録</a></li>
           <li class="nav_login"><a href='../users/login.php'><i class="fas fa-sign-in-alt"></i>ログイン</a></li>

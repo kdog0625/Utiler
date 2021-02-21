@@ -1,58 +1,67 @@
-<?php 
-  require('../common/head_info.php');
-  require('../common/database.php');
-?>
-
 <?php
+require('../common/auth.php');
+require('../common/function.php');
+require('../common/database.php');
+require('../common/head_info.php');
+if (!isLogin()) {
+  header('Location: ../login/');
+  exit;
+}
+
+$user_id = getLoginUserId();
+$database_handler = getDatabaseConnection();
+
   //post送信されていた場合
 if(!empty($_POST)) {
-  debug('POST送信があります。');
-  debug('POSTの中身：'.print_r($_POST, true));
-
   //バリデーションチェック
   $title = (isset($_POST['title'])) ? $_POST['title'] : '';
   $content = (isset($_POST['content'])) ? $_POST['content'] : '';
-
-  //最大文字数チェック
-  validMaxLen($comment, 'comment');
-  //未入力チェック
-  validNotEntered($comment, 'comment');
+  // //最大文字数チェック
+  // validMaxLen($comment, 'comment');
+  // //未入力チェック
+  // validNotEntered($comment, 'comment');
 
   if(empty($err_msg)) {
-      debug('バリデーションOKです。');
-
       //例外処理
       try {
+          $user_id = getLoginUserId();
           //DB接続 
           $database_handler = getDatabaseConnection();
           // プリペアドステートメントで SQLをあらかじめ用意しておく
-          $statement = $database_handler->prepare('INSERT INTO tweets (title, content) VALUES (:title, :content)');
+          $statement = $database_handler->prepare('INSERT INTO tweets (user_id, title, content) VALUES (:user_id, :title, :content)');
           //指定された変数名にパラメータをバインド(紐付け)
-          $statement->bindParam(':title', htmlspecialchars($name));
-          $statement->bindParam(':content', htmlspecialchars($email));
+          $statement->bindParam(':title', $title);
+          $statement->bindParam(':user_id', $user_id);
           $statement->execute();
+
+          $_SESSION['select_tweet'] = [
+            'id' => $database_handler->lastInsertId(),
+            'title' => $title,
+            'content' => '',
+        ];
 
 
           //クエリ成功の場合
           if($statement) {
               $_POST = array(); //postをクリア
-              debug('口コミ投稿ページへ遷移します。');
               header('Location:../tweets/community01.php'); //自分自身に遷移する
               exit();
           }
 
       } catch(Exception $e) {
           error_log('エラー発生：'. $e->getMessage());
-          $err_msg['common'] = MSG08;
       }
   }
 }
-debug('画面表示処理終了 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
 ?>
 
 <?php
 require('../common/header.php');
 ?>
+
+<?php
+    if(!empty($_SESSION['user']['id'])) {
+  ?>
 <div class="main-top">
     <form action="" method='post' class='form review-form'>
       <div class='button-containers'>
@@ -60,7 +69,7 @@ require('../common/header.php');
         <div class="tweet-body">
           <div class="tweet-tops">
             <label>
-              <input type="text" name='title' placeholder="タイトル"  value="<?php print(htmlspecialchars($_POST['title'],ENT_QUOTES));?>"></br>
+              <input type="text" name='title' placeholder="タイトル">
               <div class="error_mes">
               <?php 
               if(!empty($err_msg['pass'])) echo $err_msg['pass'];
@@ -87,3 +96,6 @@ require('../common/header.php');
 <?php 
  require('../common/footer.php');
 ?>  
+<?php
+    }
+  ?>

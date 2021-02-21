@@ -1,8 +1,7 @@
 <?php
-    require('../common/head_info.php');
-?>
-<?php
-    require('../common/database.php');
+require('../common/function.php');
+require('../common/database.php');
+require('../common/head_info.php');
 ?>
 
 <?php
@@ -12,6 +11,7 @@ if(!empty($_POST)) {
     $email=$_POST['email'];
     $pass = $_POST['pass'];
     $pass_re = $_POST['pass_re'];
+
 
     //未入力チェック
     validateNot($name,'name');
@@ -35,33 +35,30 @@ if(!empty($_POST)) {
 
       if(empty($err_msg)) {
         try {
-          //DB接続 
+          //DB接続処理 
           $database_handler = getDatabaseConnection();
           // プリペアドステートメントで SQLをあらかじめ用意しておく
-          $statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
-          $password = password_hash($pass, PASSWORD_DEFAULT);
-
-          //指定された変数名にパラメータをバインド(紐付け)
-          $statement->bindParam(':name', htmlspecialchars($name));
-          $statement->bindParam(':email', htmlspecialchars($email));
-          $statement->bindParam(':password', $password);
-          $statement->execute();
-
-          //クエリ成功の場合
-          if($statement) {
-            //ログイン有効期限（デフォルトを1時間とする）
-            $sessionLimit = 60*60;
-            //最終ログイン日時を現在日時に
-            $_SESSION['login_date'] = time();
-            $_SESSION['login_limit'] = $sessionLimit;
-            //ユーザーIDを格納
-            $_SESSION['user_id'] = $database_handler->lastInsertId();
+          if($statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)')){
+            $password = password_hash($pass, PASSWORD_DEFAULT);
+            //指定された変数名にパラメータをバインド(紐付け)
+            $statement->bindParam(':name', htmlspecialchars($name));
+            $statement->bindParam(':email', htmlspecialchars($email));
+            $statement->bindParam(':password', $password);
+            $statement->execute();  
           }
-          header('Location:../tweets/index.php');
+          
+          // ユーザー情報保持
+          $_SESSION['user'] = [
+            'name' => $name,
+            'id' => $database_handler->lastInsertId()
+          ];
         }catch(Exception $e) {
           error_log('エラー発生：' . $e -> getMessage());
           $err_msg['common'] = MSG08;
+          exit;
         }
+        header('Location:../tweets/index.php');
+        exit;
       }
     }
 } 
