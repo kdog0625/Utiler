@@ -375,8 +375,33 @@ input[type='submit']:hover {
   color: #333;
 }
 
+.list-menu{
+  float: left;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 1% 1% 0;
+}
+
 .title-list{
   color: rebeccapurple;
+}
+
+.community-show{
+  background: #fff;
+    margin: 40px auto 0;
+    padding: 24px 40px 40px;
+    width: 700px;
+}
+
+.item-name{
+  font-size: 24px;
+  text-align: center;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.item-main-content{
+  margin: 16px 0 0;
 }
 
 
