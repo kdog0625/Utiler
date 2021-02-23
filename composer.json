@@ -1,0 +1,7 @@
+{
+  "name": "owner/utiler",
+  "require": {
+    "php": "~7.3",
+    "ext-mbstring": "*"
+  }
+}
