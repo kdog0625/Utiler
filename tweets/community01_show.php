@@ -24,7 +24,7 @@ require('../common/header.php');
     if(!empty($_SESSION['user']['id'])) {
   ?>
     <a href="community01_edit.php?id=<?php print($tweet['id']);?>">編集する</a>
-    <a href="community01_update.php?id=<?php print($tweet['id']);?>">削除する</a>
+    <a href="community01_delete.php?id=<?php print($tweet['id']);?>">削除する</a>
   <?php
     }
   ?>
