@@ -1,12 +1,10 @@
 <?php
-require('../common/function.php');
-
+session_start();
+require('../common/validate.php');
 require('../common/database.php');
-?>
-<?php
 require('../common/head_info.php');
 $database_handler = getDatabaseConnection();
-$tweets=$database_handler->query('SELECT * FROM tweets ORDER BY id DESC;');
+$tweets=$database_handler->prepare('SELECT * FROM tweets ORDER BY id DESC;');
 $tweets->execute();
 ?>
 <?php 
@@ -39,7 +37,7 @@ require('../common/header.php');
             <?php foreach($tweets as $tweet): ?>
               <li class="list-menu">
                 <div class="title-list">
-                  <p><a href="community01_show.php?id=<?php print($tweet['id']);?>"><?php print(mb_substr($tweet['title'],0,50)); ?></a></p>
+                  <p><a href="community01_show.php?id=<?php echo($tweet['id']);?>"><?php print(mb_substr($tweet['title'],0,50)); ?></a></p>
                 </div>
               </li>
             <?php endforeach; ?>

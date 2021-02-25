@@ -1,5 +1,5 @@
 <?php
-    require('head_info.php');
+require('head_info.php');
 ?>
 <header>
   <div class='header-top'>
