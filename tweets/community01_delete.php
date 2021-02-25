@@ -1,5 +1,6 @@
 <?php
-require('../common/function.php');
+session_start();
+require('../common/validate.php');
 
 require('../common/database.php');
 ?>
@@ -7,7 +8,7 @@ require('../common/database.php');
 require('../common/head_info.php');
 $database_handler = getDatabaseConnection();
   // 削除するreviewのidの特定
-  $tweets=$database_handler->query('SELECT * FROM tweets ORDER BY id DESC;');
+  $tweets=$database_handler->query('SELECT * FROM tweets WHERE id=?');
   $tweets->execute();
   $tweet= $tweets->fetch();
     $tweet = $database_handler->prepare('DELETE FROM tweets WHERE id=?');
