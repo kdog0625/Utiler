@@ -1,23 +1,25 @@
 <?php
-require('../common/function.php');
+session_start();
 require('../common/database.php');
+require('../common/validate.php');
+
 require('../common/head_info.php');
 ?>
 
 <?php
 //POST送信された場合
 if(!empty($_POST)) {
-    $name=$_POST['name'];
-    $email=$_POST['email'];
+    $name = $_POST['name'];
+    $email = $_POST['email'];
     $pass = $_POST['pass'];
     $pass_re = $_POST['pass_re'];
 
 
     //未入力チェック
-    validateNot($name,'name');
-    validateNot($email,'email');
-    validateNot($pass,'pass');
-    validateNot($pass_re,'pass_re');
+    validateNot($name, 'name');
+    validateNot($email, 'email');
+    validateNot($pass, 'pass');
+    validateNot($pass_re, 'pass_re');
 
     if(empty($err_msg)) {
       //ニックネームの最大文字数チェック
@@ -33,6 +35,7 @@ if(!empty($_POST)) {
       validatePassMinLen($pass,'pass');
       //パスワードの半角英数字チェック
 
+
       if(empty($err_msg)) {
         try {
           //DB接続処理 
@@ -41,20 +44,19 @@ if(!empty($_POST)) {
           if($statement = $database_handler->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)')){
             $password = password_hash($pass, PASSWORD_DEFAULT);
             //指定された変数名にパラメータをバインド(紐付け)
-            $statement->bindParam(':name', htmlspecialchars($name));
-            $statement->bindParam(':email', htmlspecialchars($email));
+            $statement->bindParam(':name', $name);
+            $statement->bindParam(':email', $email);
             $statement->bindParam(':password', $password);
             $statement->execute();  
           }
           
           // ユーザー情報保持
           $_SESSION['user'] = [
-            'name' => $name,
             'id' => $database_handler->lastInsertId()
           ];
         }catch(Exception $e) {
           error_log('エラー発生：' . $e -> getMessage());
-          $err_msg['common'] = MSG08;
+          $err_msg['common'] = message05;
           exit;
         }
         header('Location:../tweets/index.php');

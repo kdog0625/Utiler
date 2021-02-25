@@ -1,15 +1,9 @@
 <?php
+session_start();
 require('../common/auth.php');
-require('../common/function.php');
+require('../common/validate.php');
 require('../common/database.php');
 require('../common/head_info.php');
-if (!isLogin()) {
-  header('Location: ../login/');
-  exit;
-}
-
-$user_id = getLoginUserId();
-$database_handler = getDatabaseConnection();
 
   //post送信されていた場合
 if(!empty($_POST)) {
@@ -25,10 +19,10 @@ if(!empty($_POST)) {
       //例外処理
       try {
           $user_id = getLoginUserId();
-          print_r('debug',$user_id);
           //DB接続 
           $database_handler = getDatabaseConnection();
-          // プリペアドステートメントで SQLをあらかじめ用意しておく
+          // プリペアドステートメントで SQLをあらかじめ用意しておく。
+          //VALUES (:user_id, :title, :content)とすることで変数の値を置き換えられる。
           $statement = $database_handler->prepare('INSERT INTO tweets (user_id, title, content) VALUES (:user_id, :title, :content)');
           //指定された変数名にパラメータをバインド(紐付け)
           $statement->bindParam(':title', $title);
@@ -36,20 +30,14 @@ if(!empty($_POST)) {
           $statement->bindParam(':user_id', $user_id);
           $statement->execute();
 
-          $_SESSION['select_tweet'] = [
+         
+          $_SESSION['tweets'] = [
             'id' => $database_handler->lastInsertId(),
             'title' => $title,
             'content' => $content,
         ];
-
-
-          //クエリ成功の場合
-          if($statement) {
-              $_POST = array(); //postをクリア
               header('Location:../tweets/community01.php'); //自分自身に遷移する
               exit();
-          }
-
       } catch(Exception $e) {
           error_log('エラー発生：'. $e->getMessage());
       }
@@ -94,10 +82,9 @@ require('../common/header.php');
       </div>
     </form>
 </div>
-
+<?php
+  }
+?>
 <?php 
  require('../common/footer.php');
 ?>  
-<?php
-    }
-  ?>
