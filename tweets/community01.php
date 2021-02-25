@@ -4,7 +4,7 @@ require('../common/validate.php');
 require('../common/database.php');
 require('../common/head_info.php');
 $database_handler = getDatabaseConnection();
-$tweets=$database_handler->query('SELECT * FROM tweets ORDER BY id DESC;');
+$tweets=$database_handler->prepare('SELECT * FROM tweets ORDER BY id DESC;');
 $tweets->execute();
 ?>
 <?php 
