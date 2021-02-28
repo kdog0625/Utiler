@@ -52,7 +52,8 @@ if(!empty($_POST)) {
         if (!empty($user) && password_verify($pass, $user['password'])) {
             // ユーザー情報保持
             $_SESSION['user'] = [
-                'id' => $id
+                'id' => $id,
+                'name' => $name,
             ];
         }
             header('Location: ../tweets/index.php');

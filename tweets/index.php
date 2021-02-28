@@ -4,7 +4,6 @@ require('../common/validate.php');
 require('../common/database.php');
 require('../common/head_info.php');
 require('../common/header.php');
-print_r($_SESSION['user']);
 ?> 
 
 
