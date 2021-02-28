@@ -436,3 +436,6 @@ footer a {
   color: #f6f5f5;
 }
 
+li{
+  list-style: none;
+}

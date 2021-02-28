@@ -28,8 +28,8 @@ require('../common/header.php');
     if($tweet['user_id']==$user_id) {
   ?>
   <div class="item-main-content"><?php print($tweet['content']);?></div>
-    <a href="community01_edit.php?id=<?php print($tweet['id']);?>">編集する</a>
-    <a href="community01_delete.php?id=<?php print($tweet['id']);?>">削除する</a>
+    <a href="community02_edit.php?id=<?php print($tweet['id']);?>">編集する</a>
+    <a href="community02_delete.php?id=<?php print($tweet['id']);?>">削除する</a>
   <?php 
     }
   ?>    
